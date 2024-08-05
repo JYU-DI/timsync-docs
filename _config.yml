@@ -1,0 +1,7 @@
+#
+# This config file is meant for settings that affect your whole TIM page. 
+# You can access these values throughout all documents by using the `site` variable.
+# For example, you can use `{{ site.title }}` to access the title of your page.
+
+# The title of your page
+title: My TIM page
