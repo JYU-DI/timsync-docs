@@ -6,7 +6,9 @@ title: Defining TIM tasks
 
 # Defining TIM tasks
 
-test
+TODO: Example of defining a task here
+
+{{task "hello_world"}}
 
 {{/inline}}
 
