@@ -1,0 +1,25 @@
+---
+uid: hello_world
+plugin: csPlugin
+---
+header: Hello, world in C#
+stem: |
+  md: Change the text in the program so that running it prints `Hello, world!`
+
+type: cs
+fullprogram: |
+  using System;
+  
+  public class HelloWorld 
+  {
+      // BYCODEBEGIN
+      public static void Main(string[] args)
+      {
+          Console.WriteLine("Goodbye, World!");
+      }
+      // BYCODEEND
+  }
+
+pointsRule:
+  expectOutput: "Hello, World!"
+  output: 1.0
