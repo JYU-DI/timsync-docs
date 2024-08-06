@@ -1,2 +1,3 @@
-#- {.huomautus}
+```` {.huomautus atom="true"}
 {{> @partial-block}}
+````

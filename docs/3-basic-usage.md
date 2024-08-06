@@ -48,6 +48,89 @@ For more information about styles, refer to the [custom styles](./6-custom-style
 - Task plugin files (`.task.yaml` or `.task.yml` extensions): Task files are used to define tasks in TIM. The file defines various settings of the task along with task unique ID (UID). TIMSync uses task files to generate TIM tasks that it places in a global "task database document" in TIM. Once a task has been defined, it can be imported into Markdown documents using the `task` helper.
 For more information about tasks, refer to the [plugin tasks](./5-plugin-tasks.md) guide.
 
+### Hidden documents and folders
+
+Any folders and files prefixed with `_` or `.` will be ignored by TIMSync file processor.
+The ignored files and folders can still be used in templating.
+
+### Special folders
+
+Some folder names have special purposes that can be used to modify behaviour of TIMSync:
+
+- `_templates` can be used to define partials and layouts that can be referenced from main documents. Refer to the [templating guide](./4-templating-basics.md) for more details.
+- `_helpers` can be used to define custom Handlebars helpers using the Rhai scripting language. Refer to the [scripting guide](./7-scripting.md) for more details.
+
+## Front matter
+
+Every document can define a *front matter* which is a special section at the beginning of the document file.
+The front matter is used to specify extra metadata for the document, like the title, a unique identifier (UID) or custom variables for use in templating.
+Defining a front matter is often optional, but if defined, it must be placed at the very start of the file.
+
+The syntax for defining front matter depends on the file type. For Markdown and task plugin files,
+the front matter is defined as follows:
+
+```md
+---
+# Front matter contents
+---
+
+Normal document contents...
+```
+
+For style files, the front matter is defined as follows:
+
+```scss
+/*
+# Front matter contents
+*/
+
+// Normal contents...
+```
+
+Inside the front matter, you can use YAML to define various values.
+Any values defined in the front matter can be used in [templating](./4-templating-basics.md)
+and [scripting](./7-scripting.md).
+Some values hold special meaning and can be used to modify the behavior of the document.
+
+Below, the special values of various file types are listed.
+All values are optional by default unless explicitly specified.
+
+- All file types
+    - `uid`: A unique identifier of the document. Can be used to refer to the document in templating. Must be unique.
+- Markdown files
+    - `title`: Title override of the final TIM document. If not specified, the filename will be used as the title.
+    - `tim_path`: Target path override of the final TIM document. Can be used to place the document in a different TIM path. If not specified, the current path of the file relative to the project root will be used.
+- Style files:
+    - `title`: Title override of the style name. If not specified, the filename will be used as the title.
+    - `tim_path`: Target path override of the final style document.
+- Task plugin files:
+    - `uid`: **REQUIRED**, unique identifier of the plugin. Use to store user answers and to import plugins into documents.
+    - `plugin`: **REQUIRED**, plugin to use to display the task. Must be a valid TIM plugin type.
+    - `plugin_attributes`: Key-value pairs of extra attributes to assign to the plugin. Can be used to e.g., define TIDE-related attributes.
+
+For example, to define a Markdown document with a custom title, a 
+custom UID and some extra variables to use in templatinbg, one could define the following front matter:
+
+{{{{raw}}}}
+```md
+---
+uid: custom_doc
+title: Custom title
+
+# Custom variables that can be used in templating and scripting
+category: coursebook
+---
+
+This is a normal document. 
+The category of the document is {{category}}.
+```
+{{{{/raw}}}}
+
+## Syncing project with TIM
+
+Once project files have been edited, run `timsync sync` to sync the project
+to TIM. Running the command will process all files, generate the TIM folder structure and upload final document contents to TIM.
+
 {{/inline}}
 
 {{> doc_layout.md}}
