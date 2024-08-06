@@ -222,6 +222,8 @@ The following variables are shared between all documents:
     ```
     {{{{/raw}}}}
 - `site.style_themes`: A map of all the style file paths defined by their file name (without file extension).
+- `site.*`: Any value defined in `_config.yml` is available via the `site.` prefix.
+
 
 ## Built-in helpers
 
@@ -299,6 +301,15 @@ Overall, the following helpers are defined:
     {{task "my_task"}}
     ```
     {{{{/raw}}}}
+
+In addition, TIMSync imports the various helpers provided by the [`handlebars_misc_helpers`](https://github.com/davidB/handlebars_misc_helpers) crate. Specifically, the following helpers are available:
+
+- [String transformation helpers](https://github.com/davidB/handlebars_misc_helpers/tree/master?tab=readme-ov-file#string-transformation)
+- [JSON/YAML/TOML helpers](https://github.com/davidB/handlebars_misc_helpers/tree/master?tab=readme-ov-file#json--yaml--toml)
+- [Path extraction helpers](https://github.com/davidB/handlebars_misc_helpers/tree/master?tab=readme-ov-file#path-extraction)
+- [File helpers](https://github.com/davidB/handlebars_misc_helpers/tree/master?tab=readme-ov-file#file)
+- [Environment variable helpers](https://github.com/davidB/handlebars_misc_helpers/tree/master?tab=readme-ov-file#environment-variable)
+- [Assignment helper](https://github.com/davidB/handlebars_misc_helpers/tree/master?tab=readme-ov-file#assign-set)
 
 ## Templates, partials, layouts
 
@@ -419,6 +430,43 @@ Currently, there is no support for simpler layout definitions. However, there ar
 to simplify defining and importing of layouts without the explicit use of inline partials.
 
 {{/note.md}}
+
+## Compatibility with TIM's own templating
+
+The static templating provided with TIMSync are fully compatible.
+
+Note that in TIM, Jinja2 is used as the templating language which has different syntax.
+
+In genral, one may use Handlebars expressions within Jinja2 templates to
+pass data between TIMSync and TIM. The main difference between the two is that TIM's Jinja2 templates can be evaluated dynamically based on the user who views the page.
+
+**As a general rule**, try to use TIMSync's static templating whenever possible, as it will never incur any runtime cost when a user visits the page. **Whenever you need to change the contents depending on the user who views the page**, use TIM's Jinja2 templating instead.
+
+A quick example of passing values between TIMSync and TIM:
+
+{{{{raw}}}}
+```md {nomacros="true"}
+---
+# Persons defined in front matter -> available in Handlebars expressions
+persons:
+  - first_name: Tom
+    last_name: Sawyer
+  - first_name: Huckleberry
+    last_name: Finn
+---
+
+{{#docsettings}}
+# Defining persons in TIM docsettings -> available in TIM Jinja2 templates
+macros:
+  persons: {{json_to_str persons}}
+{{/docsettings}}
+
+Persons is now available in TIM as a macro: %%persons%%
+
+#- {nocache="true"}
+Current user's username: %%username%%
+```
+{{{{/raw}}}}
 
 {{/inline}}
 
